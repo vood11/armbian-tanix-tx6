@@ -51,8 +51,8 @@
 
 ```bash
 apt-get -y install git
-git clone https://github.com/armbian/build
-cd build
+git clone https://github.com/smlinux/armbian-tanix-tx6.git -b tx6
+cd armbian-tanix-tx6
 ./compile.sh
 ```
 
