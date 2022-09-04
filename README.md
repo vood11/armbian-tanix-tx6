@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="#build-framework">
-  <img src=".github/armbian-logo.png" alt="Armbian logo" width="144">
+  <img src="packages/blobs/desktop/icons/armbian.png" alt="Armbian logo" width="144">
   </a><br>
   <strong>Armbian Linux Build Framework</strong><br>
 <br>
