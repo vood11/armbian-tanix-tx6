@@ -29,7 +29,7 @@ case "$BRANCH" in
 	;;
 
 	edge)
-		KERNELSOURCE=$MAINLINE_KERNEL_SOURCE
+		KERNELSOURCE='git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git'
 		KERNELSOURCENAME='name=origin'
 		KERNELBRANCH="branch:master"
 	;;
