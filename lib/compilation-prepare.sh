@@ -770,4 +770,8 @@ compilation_prepare()
 		process_patch_file "${SRC}/patch/misc/fbtft-st7789v-invert-color.patch" "applying"
 	fi
 
+	if linux-version compare "${version}" gt 6.0; then
+		process_patch_file "${SRC}/patch/misc/0101-fix-build-ac200-6.0.patch" "applying"
+	fi
+
 }
