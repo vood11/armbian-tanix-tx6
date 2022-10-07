@@ -16,7 +16,7 @@ THIS_SCRIPT="sysinfo"
 # don't change default values - they are lost on upgrades. Use /etc/default/armbian-motd for your values
 
 MOTD_DISABLE=""
-PRIMARY_INTERFACE="eth0"
+PRIMARY_INTERFACE="$(route | grep '^default' | grep -o '[^ ]*$')"
 PRIMARY_DIRECTION="rx"
 STORAGE=/dev/sda1
 HIDE_IP_PATTERN="^dummy0|^lo"
