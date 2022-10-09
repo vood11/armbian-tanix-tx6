@@ -473,9 +473,11 @@ do_default() {
 				FULL=""
 				REPLACE="-full"
 				compile_firmware
-				FULL="-full"
-				REPLACE=""
-				compile_firmware
+				if [[ "${COMPILE_FULL_FW}" == yes ]]; then
+					FULL="-full"
+					REPLACE=""
+					compile_firmware
+				fi
 			}
 
 		fi
