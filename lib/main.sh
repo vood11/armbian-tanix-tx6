@@ -501,11 +501,9 @@ if ! ls "${DEB_STORAGE}/armbian-firmware_${REVISION}_all.deb" 1> /dev/null 2>&1 
 			FULL=""
 			REPLACE="-full"
 			compile_firmware
-			if [[ "${COMPILE_FULL_FW}" == yes ]]; then
-				FULL="-full"
-				REPLACE=""
-				compile_firmware
-			fi
+			FULL="-full"
+			REPLACE=""
+			compile_firmware
 		}
 
 	fi
