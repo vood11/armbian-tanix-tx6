@@ -17,7 +17,6 @@ case $BRANCH in
 
 	edge)
 		KERNEL_VERSION_LEVEL="6.0"
-		KERNELSWITCHOBJ="tag=v6.0"
 		;;
 esac
 
@@ -30,9 +29,9 @@ case "$BRANCH" in
 	;;
 
 	edge)
-		KERNELSOURCE='git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git'
+		KERNELSOURCE=$MAINLINE_KERNEL_SOURCE
 		KERNELSOURCENAME='name=origin'
-		KERNELBRANCH="branch:master"
+		KERNELBRANCH="branch:linux-${KERNEL_VERSION_LEVEL}.y"
 	;;
 esac
 
