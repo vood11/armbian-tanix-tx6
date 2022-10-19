@@ -617,8 +617,6 @@ compilation_prepare() {
 		sed -i '/source "drivers\/net\/wireless\/ti\/Kconfig"/a source "drivers\/net\/wireless\/rtl8723ds\/Kconfig"' \
 			"$kerneldir/drivers/net/wireless/Kconfig"
 
-		process_patch_file "${SRC}/patch/misc/wireless-rtl8723ds-5.19.2.patch" "applying"
-
 	fi
 
 	# Wireless drivers for Realtek 8723DU chipsets
