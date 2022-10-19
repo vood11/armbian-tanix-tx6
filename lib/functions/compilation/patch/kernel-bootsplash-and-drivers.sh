@@ -168,25 +168,11 @@ compilation_prepare() {
 	#
 	# Older versions have AUFS support with a patch
 
-	if linux-version compare "${version}" gt 5.11 && linux-version compare "${version}" lt 5.20 && [ "$AUFS" == yes ]; then
+	if linux-version compare "${version}" gt 5.11 && linux-version compare "${version}" lt 6.1 && [ "$AUFS" == yes ]; then
 
 		# attach to specifics tag or branch
 		local aufstag
-		aufstag=$(echo "${version}" | cut -f 1-2 -d ".")
-
-		# manual overrides
-		if linux-version compare "${version}" ge 5.10.82 && linux-version compare "${version}" le 5.11; then aufstag="5.10.82"; fi
-		if linux-version compare "${version}" ge 5.15.41 && linux-version compare "${version}" le 5.16; then aufstag="5.15.41"; fi
-		if linux-version compare "${version}" ge 5.17.3 && linux-version compare "${version}" le 5.18; then aufstag="5.17.3"; fi
-
-		# check if Mr. Okajima already made a branch for this version
-		improved_git ls-remote --exit-code --heads $GITHUB_SOURCE/sfjro/aufs5-standalone "aufs${aufstag}" > /dev/null
-
-		if [ "$?" -ne "0" ]; then
-			# then use rc branch
-			aufstag="5.x-rcN"
-			improved_git ls-remote --exit-code --heads $GITHUB_SOURCE/sfjro/aufs5-standalone "aufs${aufstag}" > /dev/null
-		fi
+		aufstag="5.x-rcN"
 
 		if [ "$?" -eq "0" ]; then
 
@@ -585,7 +571,7 @@ compilation_prepare() {
 
 	# Wireless drivers for Realtek 8723DS chipsets
 
-	if linux-version compare "${version}" ge 5.0 && [ "$EXTRAWIFI" == yes ]; then
+	if linux-version compare "${version}" ge 5.0 && linux-version compare "${version}" lt 6.0 && [ "$EXTRAWIFI" == yes ]; then
 
 		# attach to specifics tag or branch
 		local rtl8723dsver="branch:master"
