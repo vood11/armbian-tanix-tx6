@@ -172,7 +172,11 @@ compilation_prepare() {
 
 		# attach to specifics tag or branch
 		local aufstag
-		aufstag="5.x-rcN"
+		if linux-version compare "${version}" ge 6.0; then
+			aufstag="6.0"
+		else
+			aufstag="5.19"
+		fi
 
 		if [ "$?" -eq "0" ]; then
 
@@ -180,9 +184,17 @@ compilation_prepare() {
 			local aufsver="branch:aufs${aufstag}"
 			fetch_from_repo "$GITHUB_SOURCE/sfjro/aufs5-standalone" "aufs5" "branch:${aufsver}" "yes"
 			cd "$kerneldir" || exit
-			process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs5-kbuild.patch" "applying"
-			process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs5-base.patch" "applying"
-			process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs5-standalone.patch" "applying"
+			if linux-version compare "${version}" ge 6.0; then
+				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs6-kbuild.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs6-base.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs6-mmap.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs6-standalone.patch" "applying"
+			else
+				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs5-kbuild.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs5-base.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs5-mmap.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs5-standalone.patch" "applying"
+			fi
 			cp -R "${SRC}/cache/sources/aufs5/${aufsver#*:}"/{Documentation,fs} .
 			cp "${SRC}/cache/sources/aufs5/${aufsver#*:}"/include/uapi/linux/aufs_type.h include/uapi/linux/
 
