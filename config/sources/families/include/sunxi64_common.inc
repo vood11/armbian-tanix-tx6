@@ -3,7 +3,7 @@ ARCH=arm64
 ATF_TARGET_MAP="PLAT=$ATF_PLAT DEBUG=1 bl31;;build/$ATF_PLAT/debug/bl31.bin"
 BOOTDELAY=1
 
-BOOTPATCHDIR='u-boot-sunxi'
+BOOTPATCHDIR='u-boot-sunxi-v2022.10'
 BOOTENV_FILE='sunxi.txt'
 UBOOT_TARGET_MAP="${UBOOT_TARGET_MAP:-;;u-boot-sunxi-with-spl.bin}"
 BOOTSCRIPT='boot-sun50i-next.cmd:boot.cmd'
@@ -12,7 +12,7 @@ LINUXFAMILY=sunxi64
 case $BRANCH in
 
 	current)
-		KERNEL_VERSION_LEVEL="5.19"
+		KERNEL_VERSION_LEVEL="6.0"
 		;;
 
 	edge)
