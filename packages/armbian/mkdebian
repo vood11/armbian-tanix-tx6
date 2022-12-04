@@ -184,6 +184,7 @@ Homepage: https://www.kernel.org/
 Package: $packagename
 Architecture: $debarch
 Provides: linux-image, linux-image-armbian, armbian-$BRANCH
+Depends: linux-image-$BRANCH-tanix-tx6
 Description: Linux kernel, armbian version $version $BRANCH
  This package contains the Linux kernel, modules and corresponding other
  files, version: $version.
@@ -202,6 +203,7 @@ Multi-Arch: same
 Package: $dtb_packagename
 Architecture: $debarch
 Provides: linux-dtb, linux-dtb-armbian, armbian-$BRANCH
+Depends: linux-dtb-$BRANCH-tanix-tx6
 Description: Armbian Linux DTB, version $version $BRANCH
  This package contains device blobs from the Linux kernel, version $version
 EOF
@@ -213,7 +215,7 @@ Package: $kernel_headers_packagename
 Section: devel
 Architecture: $debarch
 Provides: linux-headers, linux-headers-armbian, armbian-$BRANCH
-Depends: make, gcc, libc6-dev, bison, flex, libssl-dev
+Depends: linux-headers-$BRANCH-tanix-tx6, make, gcc, libc6-dev, bison, flex, libssl-dev
 Description: Linux kernel headers for $version on $debarch $BRANCH
  This package provides kernel header files for $version on $debarch
  .
