@@ -7,7 +7,7 @@ BOOTPATCHDIR='u-boot-sunxi-v2022.10'
 BOOTENV_FILE='sunxi.txt'
 UBOOT_TARGET_MAP="${UBOOT_TARGET_MAP:-;;u-boot-sunxi-with-spl.bin}"
 BOOTSCRIPT='boot-sun50i-next.cmd:boot.cmd'
-LINUXFAMILY=sunxi64
+LINUXFAMILY=tanix-tx6
 
 case $BRANCH in
 
