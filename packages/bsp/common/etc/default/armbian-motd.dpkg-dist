@@ -8,7 +8,7 @@ MOTD_DISABLE=""
 ONE_WIRE=""
 HIDE_IP_PATTERN="^dummy0|^lo"
 PRIMARY_INTERFACE="$(route | grep '^default' | grep -o '[^ ]*$')"
-PRIMARY_DIRECTION="rx"
+PRIMARY_DIRECTION="both"
 STORAGE=/dev/sda1
 
 # Temperature offset in Celcius degrees

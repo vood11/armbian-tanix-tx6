@@ -17,7 +17,7 @@ THIS_SCRIPT="sysinfo"
 
 MOTD_DISABLE=""
 PRIMARY_INTERFACE="$(route | grep '^default' | grep -o '[^ ]*$')"
-PRIMARY_DIRECTION="rx"
+PRIMARY_DIRECTION="both"
 STORAGE=/dev/sda1
 HIDE_IP_PATTERN="^dummy0|^lo"
 CPU_TEMP_LIMIT=60
