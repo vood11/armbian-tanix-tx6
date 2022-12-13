@@ -1,5 +1,5 @@
 # Tanix TX6
-BOARD_NAME="Tanix TX6"
+BOARD_NAME="tanix-tx6"
 BOARDFAMILY="sun50iw6"
 BOOTCONFIG="tanix_tx6_defconfig"
 KERNEL_TARGET="current,edge"

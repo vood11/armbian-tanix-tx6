@@ -1,5 +1,23 @@
 #!/bin/bash
 
+wireless_driver_injection()
+{
+	# mac80211 wireless driver injection features from Kali Linux
+
+	if linux-version compare "${version}" ge 5.4 && [ $EXTRAWIFI == yes ]; then
+
+		display_alert "Adding" "Wireless package injections for mac80211 compatible chipsets" "info"
+		if linux-version compare "${version}" ge 5.9; then
+			process_patch_file "${SRC}/patch/misc/kali-wifi-injection-1-v5.9-post.patch" "applying"
+		else
+			process_patch_file "${SRC}/patch/misc/kali-wifi-injection-1-pre-v5.9.patch" "applying"
+		fi
+		process_patch_file "${SRC}/patch/misc/kali-wifi-injection-2.patch" "applying"
+		process_patch_file "${SRC}/patch/misc/kali-wifi-injection-3.patch" "applying"
+
+	fi
+}
+
 driver_rtl8152_rtl8153()
 {
 	# Updated USB network drivers for RTL8152/RTL8153 based dongles that also support 2.5Gbs variants
@@ -169,11 +187,7 @@ driver_xradio_xr819()
 
 	# Wireless drivers for Xradio XR819 chipsets
 
-	if linux-version compare "${version}" ge 5.19.2 && linux-version compare "${version}" lt 6.0 && [[ "$LINUXFAMILY" == sunxi* ]] && [[ "$EXTRAWIFI" == yes ]]; then
-			process_patch_file "${SRC}/patch/misc/net-wireless-add-xr819-support-5.19.2.patch" "applying"
-	fi
-
-	if linux-version compare "${version}" ge 6.0 && [[ "$LINUXFAMILY" == sunxi* ]] && [[ "$EXTRAWIFI" == yes ]]; then
+	if linux-version compare "${version}" ge 6.0 && [[ "$LINUXFAMILY" == sunxi* ]] || [[ "$LINUXFAMILY" == tanix* ]] && [[ "$EXTRAWIFI" == yes ]]; then
 			process_patch_file "${SRC}/patch/misc/net-wireless-add-xr819-support-6.0.patch" "applying"
 	fi
 
@@ -364,7 +378,7 @@ driver_rtl8822cs_bt()
 {
 	# Bluetooth support for Realtek 8822CS (hci_ver 0x8) chipsets
 	# For sunxi, these two patches are applied in a series.
-	if linux-version compare "${version}" ge 5.11 && [[ "$LINUXFAMILY" != sunxi* ]]; then
+	if linux-version compare "${version}" ge 5.11 && [[ "$LINUXFAMILY" != sunxi* ]] || [[ "$LINUXFAMILY" != tanix* ]]; then
 
 		display_alert "Adding" "Bluetooth support for Realtek 8822CS (hci_ver 0x8) chipsets" "info"
 
@@ -484,7 +498,8 @@ driver_rtl8822BS()
 patch_drivers_network()
 {
 	display_alert "Patching network related drivers"
-	
+
+	wireless_driver_injection
 	driver_rtl8152_rtl8153
 	driver_rtl8189ES
 	driver_rtl8189FS

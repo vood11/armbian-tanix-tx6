@@ -16,7 +16,7 @@ case $BRANCH in
 		;;
 
 	edge)
-		KERNEL_VERSION_LEVEL="6.0"
+		KERNEL_VERSION_LEVEL="6.1"
 		;;
 esac
 

@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
+
 compilation_prepare() {
 
+	# Patching network drivers
 	source ${SRC}/lib/functions/compilation/patch/drivers_network.sh
+	patch_drivers_network
 
 	# Packaging patch for modern kernels should be one for all.
 	# Currently we have it per kernel family since we can't have one
@@ -24,70 +27,6 @@ compilation_prepare() {
 
 		chmod 755 ${kerneldir}/scripts/package/{builddeb,mkdebian}
 
-	elif linux-version compare "${version}" ge 5.8.17 &&
-		linux-version compare "${version}" le 5.9 ||
-		linux-version compare "${version}" ge 5.9.2; then
-		display_alert "Adjusting" "packaging" "info"
-		cd "$kerneldir" || exit
-		process_patch_file "${SRC}/patch/misc/general-packaging-5.8-9.y.patch" "applying"
-	elif linux-version compare "${version}" ge 5.6; then
-		display_alert "Adjusting" "packaging" "info"
-		cd "$kerneldir" || exit
-		process_patch_file "${SRC}/patch/misc/general-packaging-5.6.y.patch" "applying"
-	elif linux-version compare "${version}" ge 5.3; then
-		display_alert "Adjusting" "packaging" "info"
-		cd "$kerneldir" || exit
-		process_patch_file "${SRC}/patch/misc/general-packaging-5.3.y.patch" "applying"
-	fi
-
-	if [[ "${version}" == "4.19."* ]] && [[ "$LINUXFAMILY" == sunxi* || "$LINUXFAMILY" == meson64 ||
-		"$LINUXFAMILY" == mvebu64 || "$LINUXFAMILY" == mt7623 || "$LINUXFAMILY" == mvebu ]]; then
-		display_alert "Adjusting" "packaging" "info"
-		cd "$kerneldir" || exit
-		process_patch_file "${SRC}/patch/misc/general-packaging-4.19.y.patch" "applying"
-	fi
-
-	if [[ "${version}" == "4.19."* ]] && [[ "$LINUXFAMILY" == rk35xx ]]; then
-		display_alert "Adjusting" "packaging" "info"
-		cd "$kerneldir" || exit
-		process_patch_file "${SRC}/patch/misc/general-packaging-4.19.y-rk35xx.patch" "applying"
-	fi
-
-	if [[ "${version}" == "4.14."* ]] && [[ "$LINUXFAMILY" == s5p6818 || "$LINUXFAMILY" == mvebu64 ||
-		"$LINUXFAMILY" == imx7d || "$LINUXFAMILY" == odroidxu4 || "$LINUXFAMILY" == mvebu ]]; then
-		display_alert "Adjusting" "packaging" "info"
-		cd "$kerneldir" || exit
-		process_patch_file "${SRC}/patch/misc/general-packaging-4.14.y.patch" "applying"
-	fi
-
-	if [[ "${version}" == "4.4."* || "${version}" == "4.9."* ]] &&
-		[[ "$LINUXFAMILY" == rockpis || "$LINUXFAMILY" == rk3399 ]]; then
-		display_alert "Adjusting" "packaging" "info"
-		cd "$kerneldir" || exit
-		process_patch_file "${SRC}/patch/misc/general-packaging-4.4.y-rk3399.patch" "applying"
-	fi
-
-	if [[ "${version}" == "4.4."* ]] &&
-		[[ "$LINUXFAMILY" == rockchip64 || "$LINUXFAMILY" == media* ]]; then
-		display_alert "Adjusting" "packaging" "info"
-		cd "$kerneldir" || exit
-		if [[ $BOARD == nanopct4 ]]; then
-			process_patch_file "${SRC}/patch/misc/general-packaging-4.4.y-rk3399.patch" "applying"
-		else
-			process_patch_file "${SRC}/patch/misc/general-packaging-4.4.y-rockchip64.patch" "applying"
-		fi
-	fi
-
-	if [[ "${version}" == "4.4."* ]] && [[ "$LINUXFAMILY" == rockchip || "$LINUXFAMILY" == rk322x ]]; then
-		display_alert "Adjusting" "packaging" "info"
-		cd "$kerneldir" || exit
-		process_patch_file "${SRC}/patch/misc/general-packaging-4.4.y.patch" "applying"
-	fi
-
-	if [[ "${version}" == "4.9."* ]] && [[ "$LINUXFAMILY" == meson64 || "$LINUXFAMILY" == odroidc4 ]]; then
-		display_alert "Adjusting" "packaging" "info"
-		cd "$kerneldir" || exit
-		process_patch_file "${SRC}/patch/misc/general-packaging-4.9.y.patch" "applying"
 	fi
 
 	# After the patches have been applied,
@@ -147,23 +86,6 @@ compilation_prepare() {
 
 		display_alert "Adding" "Missing headers" "info"
 		process_patch_file "${SRC}/patch/misc/wireless-bring-back-headers.patch" "applying"
-
-	fi
-
-	#
-	# mac80211 wireless driver injection features from Kali Linux
-	#
-
-	if linux-version compare "${version}" ge 5.4 && [ $EXTRAWIFI == yes ]; then
-
-		display_alert "Adding" "Wireless package injections for mac80211 compatible chipsets" "info"
-		if linux-version compare "${version}" ge 5.9; then
-			process_patch_file "${SRC}/patch/misc/kali-wifi-injection-1-v5.9-post.patch" "applying"
-		else
-			process_patch_file "${SRC}/patch/misc/kali-wifi-injection-1-pre-v5.9.patch" "applying"
-		fi
-		process_patch_file "${SRC}/patch/misc/kali-wifi-injection-2.patch" "applying"
-		process_patch_file "${SRC}/patch/misc/kali-wifi-injection-3.patch" "applying"
 
 	fi
 
@@ -232,8 +154,6 @@ compilation_prepare() {
 			"$kerneldir/scripts/package/builddeb"
 
 	fi
-
-	patch_drivers_network
 
 	# Exfat driver
 
