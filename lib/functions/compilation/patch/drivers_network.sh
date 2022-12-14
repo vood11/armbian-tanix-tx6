@@ -151,7 +151,7 @@ driver_rtl8811_rtl8812_rtl8814_rtl8821()
 	if linux-version compare "${version}" ge 3.14 && [ "$EXTRAWIFI" == yes ]; then
 
 		# attach to specifics tag or branch
-		local rtl8812auver="commit:41532e3b16dcf27f06e6fe5a26314f3aa24d4f87"
+		local rtl8812auver="branch:v5.6.4.2"
 
 		display_alert "Adding" "Wireless drivers for Realtek 8811, 8812, 8814 and 8821 chipsets ${rtl8812auver}" "info"
 
@@ -175,9 +175,6 @@ driver_rtl8811_rtl8812_rtl8814_rtl8821()
 		sed -i '/source "drivers\/net\/wireless\/ti\/Kconfig"/a source "drivers\/net\/wireless\/rtl8812au\/Kconfig"' \
 			"$kerneldir/drivers/net/wireless/Kconfig"
 
-		# add support for 5.19.2
-		process_patch_file "${SRC}/patch/misc/wireless-rtl8812au-5.19.2.patch" "applying"
-
 	fi
 
 }
@@ -187,9 +184,43 @@ driver_xradio_xr819()
 
 	# Wireless drivers for Xradio XR819 chipsets
 
+	#if linux-version compare "${version}" ge 6.0 && [[ "$LINUXFAMILY" == sunxi* ]] || [[ "$LINUXFAMILY" == tanix* ]] && [[ "$EXTRAWIFI" == yes ]]; then
+			#process_patch_file "${SRC}/patch/misc/net-wireless-add-xr819-support-6.0.patch" "applying"
+	#fi
+
 	if linux-version compare "${version}" ge 6.0 && [[ "$LINUXFAMILY" == sunxi* ]] || [[ "$LINUXFAMILY" == tanix* ]] && [[ "$EXTRAWIFI" == yes ]]; then
-			process_patch_file "${SRC}/patch/misc/net-wireless-add-xr819-support-6.0.patch" "applying"
+
+		display_alert "Adding" "Wireless drivers for Xradio XR819 chipsets" "info"
+
+	if linux-version compare "${version}" lt 6.1; then
+		xradio_source_code="1ccf0ccc73e6fb80795e19baaaa97cdef145fb85"
+		fetch_from_repo "$GITHUB_SOURCE/dbeinder/xradio" "xradio" "commit:$xradio_source_code" "yes"
+	else
+		xradio_source_code="dev"
+		fetch_from_repo "$GITHUB_SOURCE/dbeinder/xradio" "xradio" "branch:$xradio_source_code" "yes"
 	fi
+		cd "$kerneldir" || exit
+		rm -rf "$kerneldir/drivers/net/wireless/xradio"
+		mkdir -p "$kerneldir/drivers/net/wireless/xradio/"
+		cp "${SRC}"/cache/sources/xradio/$xradio_source_code/*.{h,c} \
+			"$kerneldir/drivers/net/wireless/xradio/"
+
+		# Makefile
+		cp "${SRC}/cache/sources/xradio/$xradio_source_code/Makefile" \
+			"$kerneldir/drivers/net/wireless/xradio/Makefile"
+
+		# Kconfig
+		sed -i 's/---help---/help/g' "${SRC}/cache/sources/xradio/$xradio_source_code/Kconfig"
+		cp "${SRC}/cache/sources/xradio/$xradio_source_code/Kconfig" \
+			"$kerneldir/drivers/net/wireless/xradio/Kconfig"
+
+		# Add to section Makefile
+		echo "obj-\$(CONFIG_WLAN_VENDOR_XRADIO) += xradio/" \
+			>> "$kerneldir/drivers/net/wireless/Makefile"
+		sed -i '/source "drivers\/net\/wireless\/ti\/Kconfig"/a source "drivers\/net\/wireless\/xradio\/Kconfig"' \
+			"$kerneldir/drivers/net/wireless/Kconfig"
+
+fi
 
 }
 
@@ -200,15 +231,15 @@ driver_rtl8811CU_rtl8821C()
 	if linux-version compare "${version}" ge 3.14 && [ "$EXTRAWIFI" == yes ]; then
 
 		# attach to specifics tag or branch
-		local rtl8811cuver="commit:8c2226a74ae718439d56248bd2e44ccf717086d5"
+		local rtl8811cuver="branch:main"
 
 		display_alert "Adding" "Wireless drivers for Realtek RTL8811CU and RTL8821C chipsets ${rtl8811cuver}" "info"
 
-		fetch_from_repo "$GITHUB_SOURCE/brektrou/rtl8821CU" "rtl8811cu" "${rtl8811cuver}" "yes"
+		fetch_from_repo "$GITHUB_SOURCE/morrownr/8821cu-20210118" "rtl8811cu" "${rtl8811cuver}" "yes"
 		cd "$kerneldir" || exit
 		rm -rf "$kerneldir/drivers/net/wireless/rtl8811cu"
 		mkdir -p "$kerneldir/drivers/net/wireless/rtl8811cu/"
-		cp -R "${SRC}/cache/sources/rtl8811cu/${rtl8811cuver#*:}"/{core,hal,include,os_dep,platform,rtl8821c.mk} \
+		cp -R "${SRC}/cache/sources/rtl8811cu/${rtl8811cuver#*:}"/{core,hal,include,os_dep,platform,halmac.mk,rtl8821c.mk} \
 			"$kerneldir/drivers/net/wireless/rtl8811cu"
 
 		# Makefile
@@ -232,12 +263,6 @@ driver_rtl8811CU_rtl8821C()
 		echo "obj-\$(CONFIG_RTL8821CU) += rtl8811cu/" >> "$kerneldir/drivers/net/wireless/Makefile"
 		sed -i '/source "drivers\/net\/wireless\/ti\/Kconfig"/a source "drivers\/net\/wireless\/rtl8811cu\/Kconfig"' \
 			"$kerneldir/drivers/net/wireless/Kconfig"
-
-		# add support for 5.18.y
-		process_patch_file "${SRC}/patch/misc/wireless-rtl8821cu.patch" "applying"
-
-		# add support for 5.19.2
-		process_patch_file "${SRC}/patch/misc/wireless-rtl8811cu-5.19.2.patch" "applying"
 
 	fi
 
@@ -298,11 +323,11 @@ driver_rtl88x2bu()
 	if linux-version compare "${version}" ge 5.0 && [ "$EXTRAWIFI" == yes ]; then
 
 		# attach to specifics tag or branch
-		local rtl88x2buver="commit:00f51d93fe8309b0e23782ad621a038c98c7f031"
+		local rtl88x2buver="branch:main"
 
 		display_alert "Adding" "Wireless drivers for Realtek 88x2bu chipsets ${rtl88x2buver}" "info"
 
-		fetch_from_repo "$GITHUB_SOURCE/cilynx/rtl88x2bu" "rtl88x2bu" "${rtl88x2buver}" "yes"
+		fetch_from_repo "$GITHUB_SOURCE/morrownr/88x2bu-20210702" "rtl88x2bu" "${rtl88x2buver}" "yes"
 		cd "$kerneldir" || exit
 		rm -rf "$kerneldir/drivers/net/wireless/rtl88x2bu"
 		mkdir -p "$kerneldir/drivers/net/wireless/rtl88x2bu/"
