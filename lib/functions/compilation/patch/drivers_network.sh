@@ -192,13 +192,9 @@ driver_xradio_xr819()
 
 		display_alert "Adding" "Wireless drivers for Xradio XR819 chipsets" "info"
 
-	if linux-version compare "${version}" lt 6.1; then
-		xradio_source_code="1ccf0ccc73e6fb80795e19baaaa97cdef145fb85"
-		fetch_from_repo "$GITHUB_SOURCE/dbeinder/xradio" "xradio" "commit:$xradio_source_code" "yes"
-	else
-		xradio_source_code="dev"
-		fetch_from_repo "$GITHUB_SOURCE/dbeinder/xradio" "xradio" "branch:$xradio_source_code" "yes"
-	fi
+		xradio_source_code="master"
+		fetch_from_repo "$GITHUB_SOURCE/smlinux/xradio" "xradio" "branch:$xradio_source_code" "yes"
+
 		cd "$kerneldir" || exit
 		rm -rf "$kerneldir/drivers/net/wireless/xradio"
 		mkdir -p "$kerneldir/drivers/net/wireless/xradio/"
@@ -215,7 +211,7 @@ driver_xradio_xr819()
 			"$kerneldir/drivers/net/wireless/xradio/Kconfig"
 
 		# Add to section Makefile
-		echo "obj-\$(CONFIG_WLAN_VENDOR_XRADIO) += xradio/" \
+			echo "obj-\$(CONFIG_XRADIO) += xradio/" \
 			>> "$kerneldir/drivers/net/wireless/Makefile"
 		sed -i '/source "drivers\/net\/wireless\/ti\/Kconfig"/a source "drivers\/net\/wireless\/xradio\/Kconfig"' \
 			"$kerneldir/drivers/net/wireless/Kconfig"
