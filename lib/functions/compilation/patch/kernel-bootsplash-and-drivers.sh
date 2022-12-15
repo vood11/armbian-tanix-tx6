@@ -93,35 +93,35 @@ compilation_prepare() {
 	#
 	# Older versions have AUFS support with a patch
 
-	if linux-version compare "${version}" gt 5.11 && linux-version compare "${version}" lt 6.1 && [ "$AUFS" == yes ]; then
+	if linux-version compare "${version}" gt 5.11 && [ "$AUFS" == yes ]; then
 
 		# attach to specifics tag or branch
 		local aufstag
 		if linux-version compare "${version}" ge 6.0; then
-			aufstag="6.0"
+			aufstag="6.x-rcN"
 		else
-			aufstag="5.19"
+			aufstag="5.x-rcN"
 		fi
 
 		if [ "$?" -eq "0" ]; then
 
 			display_alert "Adding" "AUFS ${aufstag}" "info"
 			local aufsver="branch:aufs${aufstag}"
-			fetch_from_repo "$GITHUB_SOURCE/sfjro/aufs5-standalone" "aufs5" "branch:${aufsver}" "yes"
+			fetch_from_repo "$GITHUB_SOURCE/sfjro/aufs-standalone" "aufs" "branch:${aufsver}" "yes"
 			cd "$kerneldir" || exit
 			if linux-version compare "${version}" ge 6.0; then
-				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs6-kbuild.patch" "applying"
-				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs6-base.patch" "applying"
-				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs6-mmap.patch" "applying"
-				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs6-standalone.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs/${aufsver#*:}/aufs6-kbuild.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs/${aufsver#*:}/aufs6-base.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs/${aufsver#*:}/aufs6-mmap.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs/${aufsver#*:}/aufs6-standalone.patch" "applying"
 			else
-				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs5-kbuild.patch" "applying"
-				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs5-base.patch" "applying"
-				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs5-mmap.patch" "applying"
-				process_patch_file "${SRC}/cache/sources/aufs5/${aufsver#*:}/aufs5-standalone.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs/${aufsver#*:}/aufs5-kbuild.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs/${aufsver#*:}/aufs5-base.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs/${aufsver#*:}/aufs5-mmap.patch" "applying"
+				process_patch_file "${SRC}/cache/sources/aufs/${aufsver#*:}/aufs5-standalone.patch" "applying"
 			fi
-			cp -R "${SRC}/cache/sources/aufs5/${aufsver#*:}"/{Documentation,fs} .
-			cp "${SRC}/cache/sources/aufs5/${aufsver#*:}"/include/uapi/linux/aufs_type.h include/uapi/linux/
+			cp -R "${SRC}/cache/sources/aufs/${aufsver#*:}"/{Documentation,fs} .
+			cp "${SRC}/cache/sources/aufs/${aufsver#*:}"/include/uapi/linux/aufs_type.h include/uapi/linux/
 
 		fi
 	fi
