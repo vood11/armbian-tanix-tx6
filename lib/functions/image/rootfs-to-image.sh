@@ -115,7 +115,7 @@ POST_UMOUNT_FINAL_IMAGE
 		if [[ $COMPRESS_OUTPUTIMAGE == "" || $COMPRESS_OUTPUTIMAGE == no ]]; then
 			COMPRESS_OUTPUTIMAGE="sha,gpg,img"
 		elif [[ $COMPRESS_OUTPUTIMAGE == yes ]]; then
-			COMPRESS_OUTPUTIMAGE="sha,gpg,7z"
+			COMPRESS_OUTPUTIMAGE="sha,gpg,xz"
 		fi
 
 		if [[ $COMPRESS_OUTPUTIMAGE == *gz* ]]; then
