@@ -10,7 +10,7 @@ compile_firmware() {
 	plugin_dir="armbian-firmware${FULL}"
 	mkdir -p "${firmwaretempdir}/${plugin_dir}/lib/firmware"
 
-	fetch_from_repo "$GITHUB_SOURCE/armbian/firmware" "armbian-firmware-git" "branch:master"
+	fetch_from_repo "$GITHUB_SOURCE/smlinux/armbian-firmware" "armbian-firmware-git" "branch:master"
 	if [[ -n $FULL ]]; then
 		fetch_from_repo "$MAINLINE_FIRMWARE_SOURCE" "linux-firmware-git" "branch:main"
 		# cp : create hardlinks
