@@ -190,33 +190,11 @@ driver_xradio_xr819()
 
 	if linux-version compare "${version}" ge 6.0 && [[ "$LINUXFAMILY" == sunxi* ]] || [[ "$LINUXFAMILY" == tanix* ]] && [[ "$EXTRAWIFI" == yes ]]; then
 
-		display_alert "Adding" "Wireless drivers for Xradio XR819 chipsets" "info"
+		display_alert "Adding" "Wireless drivers for ST Xradio XR819 chipsets" "info"
 
-		xradio_source_code="master"
-		fetch_from_repo "$GITHUB_SOURCE/smlinux/xradio" "xradio" "branch:$xradio_source_code" "yes"
+		process_patch_file "${SRC}/patch/misc/net-wireless-add-xr819-support-6.0.patch" "applying"
 
-		cd "$kerneldir" || exit
-		rm -rf "$kerneldir/drivers/net/wireless/xradio"
-		mkdir -p "$kerneldir/drivers/net/wireless/xradio/"
-		cp "${SRC}"/cache/sources/xradio/$xradio_source_code/*.{h,c} \
-			"$kerneldir/drivers/net/wireless/xradio/"
-
-		# Makefile
-		cp "${SRC}/cache/sources/xradio/$xradio_source_code/Makefile" \
-			"$kerneldir/drivers/net/wireless/xradio/Makefile"
-
-		# Kconfig
-		sed -i 's/---help---/help/g' "${SRC}/cache/sources/xradio/$xradio_source_code/Kconfig"
-		cp "${SRC}/cache/sources/xradio/$xradio_source_code/Kconfig" \
-			"$kerneldir/drivers/net/wireless/xradio/Kconfig"
-
-		# Add to section Makefile
-			echo "obj-\$(CONFIG_XRADIO) += xradio/" \
-			>> "$kerneldir/drivers/net/wireless/Makefile"
-		sed -i '/source "drivers\/net\/wireless\/ti\/Kconfig"/a source "drivers\/net\/wireless\/xradio\/Kconfig"' \
-			"$kerneldir/drivers/net/wireless/Kconfig"
-
-fi
+	fi
 
 }
 
