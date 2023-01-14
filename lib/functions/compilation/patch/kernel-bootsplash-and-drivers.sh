@@ -99,7 +99,7 @@ compilation_prepare() {
 		# attach to specifics tag or branch
 		local aufstag
 		if linux-version compare "${version}" ge 6.1; then
-			aufstag="6.x-rcN"
+			aufstag="6.1"
 		else
 			aufstag="6.0"
 		fi
