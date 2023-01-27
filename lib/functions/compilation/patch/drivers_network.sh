@@ -530,5 +530,8 @@ patch_drivers_network()
 	driver_rtl8723DU
 	driver_rtl8822BS
 
+	# fix compilation for kernels >= 5.4
+	process_patch_file "${SRC}/patch/misc/wireless-import-vfs-module.patch" "applying"
+
 	display_alert "Network related drivers patched" "" "info"
 }
